@@ -42,6 +42,9 @@ RUN rm LICENSE README.md \
 RUN ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffmpeg \
  && ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffprobe
 
+RUN echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
+RUN sed -i 's+UsePAM yes+UsePAM no+g' /etc/rffmpeg/rffmpeg.yml
+
 RUN service ssh start
 
 EXPOSE 22
