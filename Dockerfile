@@ -3,8 +3,8 @@ FROM python:3
 ARG ssh_prv
 ARG ssh_pub
 
-ENV ssh_prv_key="" \
-    ssh_pub_key=""
+ENV SSH_PRV_KEY="" \
+    SSH_PUB_KEY=""
 
 RUN apt update \
  && apt dist-upgrade -qqy \
@@ -18,8 +18,8 @@ WORKDIR /var/lib/jellyfin
 
 RUN mkdir .ssh
 
-RUN echo "$ssh_prv_key" > .ssh/id_rsa \
- && echo "$ssh_pub_key" > .ssh/id_rsa.pub \
+RUN echo "$SSH_PRV_KEY" > .ssh/id_rsa \
+ && echo "$SSH_PUB_KEY" > .ssh/id_rsa.pub \
  && chown -R jellyfin:jellyfin .ssh \
  && chmod 600 .ssh/id_rsa \
  && chmod 600 .ssh/id_rsa.pub
