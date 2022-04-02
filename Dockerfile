@@ -3,8 +3,8 @@ FROM python:3
 ARG SSH_PRV
 ARG SSH_PUB
 
-ENV SSH_PRV_KEY=SSH_PRV_KEY \
-    SSH_PUB_KEY=SSH_PUB
+ENV SSH_PRV_KEY=${SSH_PRV_KEY} \
+    SSH_PUB_KEY=${SSH_PUB}
 
 RUN apt update \
  && apt dist-upgrade -qqy \
