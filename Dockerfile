@@ -6,7 +6,7 @@ ARG ssh_pub
 ENV ssh_prv_key=$ssh_prv
 ENV ssh_pub_key=$ssh_pub
 
-RUN apt update \
+RUN apt update -y\
  && apt dist-upgarde -qqy\
  && apt install python3-yaml python3-subprocess git openssh-server -qqy\
  && git clone https://github.com/joshuaboniface/rffmpeg.git
