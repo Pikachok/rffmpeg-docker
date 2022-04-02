@@ -12,7 +12,7 @@ RUN apt update \
  && pip install pyyaml \
  && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
 
-RUN useradd -b /var/lib/jellyfin jellyfin
+RUN useradd -b /var/lib jellyfin
 
 WORKDIR /var/lib/jellyfin
 
