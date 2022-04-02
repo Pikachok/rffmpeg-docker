@@ -33,3 +33,9 @@ RUN rm LICENSE README.md \
 
 RUN ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffmpeg \
  && ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffprobe
+
+RUN service ssh start
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd","-D"]
