@@ -20,7 +20,7 @@ RUN mkdir .ssh
 
 RUN echo "$ssh_prv_key" > .ssh/id_rsa \
  && echo "$ssh_pub_key" > .ssh/id_rsa.pub \
- && chown -R jellyfin .ssh \
+ && chown -R jellyfin:jellyfin .ssh \
  && chmod 600 .ssh/id_rsa \
  && chmod 600 .ssh/id_rsa.pub
 
