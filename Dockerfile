@@ -18,9 +18,9 @@ WORKDIR /var/lib/jellyfin
 
 RUN mkdir .ssh
 
-RUN echo "$SSH_PRV_KEY" > .ssh/id_rsa \
- && echo "$SSH_PUB_KEY" > .ssh/id_rsa.pub \
- && chown -R jellyfin:jellyfin .ssh \
+RUN echo "$SSH_PRV_KEY" > .ssh/id_rsa
+RUN echo "$SSH_PUB_KEY" > .ssh/id_rsa.pub
+RUN chown -R jellyfin:jellyfin .ssh \
  && chmod 600 .ssh/id_rsa \
  && chmod 600 .ssh/id_rsa.pub
 
