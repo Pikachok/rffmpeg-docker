@@ -21,7 +21,7 @@ RUN useradd -m -b /var/lib/jellyfin jellyfin
 
 WORKDIR /var/lib/jellyfin
 
-#RUN mkdir .ssh
+RUN mkdir .ssh
 
 #RUN echo ${SSH_PRV_KEY} > .ssh/id_rsa \
 # && echo ${SSH_PUB_KEY} > .ssh/id_rsa.pub \
