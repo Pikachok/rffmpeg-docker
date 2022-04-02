@@ -10,11 +10,14 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update \
  && apt dist-upgrade -qqy \
- && apt install git openssh-server ffmpeg -qqy \
+ && apt install git openssh-server -qqy \
  && pip install pyyaml \
  && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
 
-RUN useradd -m -b /var/lib jellyfin
+RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
+ && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
+
+RUN useradd -m -b /var/lib/jellyfin jellyfin
 
 WORKDIR /var/lib/jellyfin
 
