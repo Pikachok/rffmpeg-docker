@@ -17,7 +17,10 @@ RUN apt update \
 RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
  && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
 
-RUN useradd -m -b /var/lib/jellyfin jellyfin
+RUN useradd -m -b /var/lib/ jellyfin
+
+RUN mkdir /var/log/jellyfin \
+ && chown jellyfin:jellyfin /var/log/jellyfin
 
 WORKDIR /var/lib/jellyfin
 
