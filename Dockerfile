@@ -8,13 +8,21 @@ ENV ssh_pub_key=$ssh_pub
 
 RUN apt update \
  && apt dist-upgrade -qqy \
- && apt install python3-yaml python3-subprocess git openssh-server -qqy \
- && git clone https://github.com/joshuaboniface/rffmpeg.git
+ && apt install git openssh-server -qqy \
+ && pip install pyyaml \
+ && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
 
-RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa \
- && echo "$ssh_pub_key" > /root/.ssh/id_rsa.pub \
- && chmod 600 /root/.ssh/id_rsa \
- && chmod 600 /root/.ssh/id_rsa.pub
+RUN useradd -b /var/lib/jellyfin jellyfin
+
+WORKDIR /var/lib/jellyfin
+
+RUN mkdir .ssh \
+ && chown jellyfin .ssh
+
+RUN echo "$ssh_prv_key" > .ssh/id_rsa \
+ && echo "$ssh_pub_key" > .ssh/id_rsa.pub \
+ && chmod 600 .ssh/id_rsa \
+ && chmod 600 .ssh/id_rsa.pub
 
 WORKDIR /etc/rffmpeg
 
