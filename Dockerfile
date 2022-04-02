@@ -1,7 +1,7 @@
 FROM python:3
 
-ARG ssh_prv_key
-ARG ssh_pub_key
+ENV ssh_prv_key
+ENV ssh_pub_key
 
 RUN apt update \
  && apt dist-upgarde \
