@@ -7,8 +7,8 @@ ENV ssh_prv_key=$ssh_prv
 ENV ssh_pub_key=$ssh_pub
 
 RUN apt update \
- && apt dist-upgarde \
- && apt install python3-yaml python3-subprocess git openssh-server \
+ && apt dist-upgarde -qqy\
+ && apt install python3-yaml python3-subprocess git openssh-server -qqy\
  && git clone https://github.com/joshuaboniface/rffmpeg.git
 
 RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa && \
@@ -22,6 +22,6 @@ RUN rm LICENSE README.md \
  && cp rffmpeg.yml.sample rffmpeg.yml \
  && rm rffmpeg.yml.sample \
  && cp ./rffmpeg.py /usr/local/bin/rffmpeg.py \
- 
+
 RUN ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffmpeg \
- && ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffprobe
+    && ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffprobe
