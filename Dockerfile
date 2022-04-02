@@ -16,11 +16,11 @@ RUN useradd -b /var/lib jellyfin
 
 WORKDIR /var/lib/jellyfin
 
-RUN mkdir .ssh \
- && chown jellyfin .ssh
+RUN mkdir .ssh
 
 RUN echo "$ssh_prv_key" > .ssh/id_rsa \
  && echo "$ssh_pub_key" > .ssh/id_rsa.pub \
+ && chown -R jellyfin .ssh \
  && chmod 600 .ssh/id_rsa \
  && chmod 600 .ssh/id_rsa.pub
 
