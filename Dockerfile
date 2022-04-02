@@ -3,8 +3,8 @@ FROM python:3
 ARG ssh_prv
 ARG ssh_pub
 
-ENV ssh_prv_key=$ssh_prv
-ENV ssh_pub_key=$ssh_pub
+ENV ssh_prv_key="" \
+    ssh_pub_key=""
 
 RUN apt update \
  && apt dist-upgrade -qqy \
