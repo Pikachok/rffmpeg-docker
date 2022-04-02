@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update \
  && apt dist-upgrade -qqy \
- && apt install git openssh-server libavcodec libavformat libavutil libavfilter libavdevice libswresample libswscale -qqy \
+ && apt install git openssh-server ffmpeg -qqy \
  && pip install pyyaml \
  && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
 
