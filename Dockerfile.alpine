@@ -1,6 +1,4 @@
-FROM python:3
-
-ENV DEBIAN_FRONTEND noninteractive
+FROM lscr.io/linuxserver/openssh-server
 
 #ARG SSH_PRV
 #ARG SSH_PUB
@@ -8,24 +6,22 @@ ENV DEBIAN_FRONTEND noninteractive
 #ENV SSH_PRV_KEY=${SSH_PRV_KEY} \
 #    SSH_PUB_KEY=${SSH_PUB}
 
-RUN apt update \
- && apt dist-upgrade -qqy \
- && apt install git openssh-server ffmpeg -qqy \
+RUN apk update \
+ && apk upgrade \
+ && apk add python3 py3-pip git ffmpeg \
  && pip install pyyaml \
  && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
 
-RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
- && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
+#RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
+# && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
 
 RUN useradd -m -b /var/lib/ jellyfin
-
 RUN mkdir /var/log/jellyfin \
  && chown jellyfin:jellyfin /var/log/jellyfin
+#WORKDIR /var/lib/jellyfin
 
-WORKDIR /var/lib/jellyfin
-
-RUN mkdir .ssh
-
+#RUN mkdir .ssh
+#RUN touch rffmpeg.log
 #RUN echo ${SSH_PRV_KEY} > .ssh/id_rsa \
 # && echo ${SSH_PUB_KEY} > .ssh/id_rsa.pub \
 # && chown -R jellyfin:jellyfin .ssh \
@@ -39,14 +35,14 @@ RUN rm LICENSE README.md \
  && rm rffmpeg.yml.sample \
  && cp ./rffmpeg.py /usr/local/bin/rffmpeg.py
 
+RUN sed -i 's+ffmpeg: "/usr/lib/jellyfin-ffmpeg/ffmpeg"+ffmpeg: "/usr/bin/ffmpeg"+g' /etc/rffmpeg/rffmpeg.yml \
+ && sed -i 's+ffprobe: "/usr/lib/jellyfin-ffmpeg/ffprobe"+ffprobe: "/usr/bin/ffprobe"+g' /etc/rffmpeg/rffmpeg.yml
+
 RUN ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffmpeg \
  && ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffprobe
 
-RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-RUN sed -i 's+UsePAM yes+UsePAM no+g' /etc/rffmpeg/rffmpeg.yml
+#RUN service ssh start
 
-RUN service ssh start
+#EXPOSE 22
 
-EXPOSE 22
-
-CMD ["/usr/sbin/sshd","-D"]
+#CMD ["/usr/sbin/sshd","-D"]
