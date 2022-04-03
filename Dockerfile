@@ -2,11 +2,13 @@ FROM python:3
 
 ENV DEBIAN_FRONTEND noninteractive
 
-#ARG SSH_PRV
-#ARG SSH_PUB
+ARG S6_OVERLAY_VERSION=3.1.0.1
 
-#ENV SSH_PRV_KEY=${SSH_PRV_KEY} \
-#    SSH_PUB_KEY=${SSH_PUB}
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+
 
 RUN apt update \
  && apt dist-upgrade -qqy \
@@ -16,21 +18,6 @@ RUN apt update \
 
 RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
  && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
-
-RUN useradd -m -b /var/lib/ jellyfin
-
-RUN mkdir /var/log/jellyfin \
- && chown jellyfin:jellyfin /var/log/jellyfin
-
-WORKDIR /var/lib/jellyfin
-
-RUN mkdir .ssh
-
-#RUN echo ${SSH_PRV_KEY} > .ssh/id_rsa \
-# && echo ${SSH_PUB_KEY} > .ssh/id_rsa.pub \
-# && chown -R jellyfin:jellyfin .ssh \
-# && chmod 600 .ssh/id_rsa \
-# && chmod 600 .ssh/id_rsa.pub
 
 WORKDIR /etc/rffmpeg
 
@@ -45,8 +32,15 @@ RUN ln -s /usr/local/bin/rffmpeg.py /usr/local/bin/ffmpeg \
 RUN echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
 RUN sed -i 's+UsePAM yes+UsePAM no+g' /etc/rffmpeg/rffmpeg.yml
 
-RUN service ssh start
+RUN groupmod -g 1000 users && \
+ useradd -u 911 -U -d /var/lib/jellyfin -s /bin/false -m jellyfin && \
+ usermod -G users jellyfin && \
+ usermod --shell /bin/bash jellyfin && \
+  rm -rf \
+    /tmp/*
 
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd","-D"]
+COPY /root /
+
+ENTRYPOINT ["/init"]
