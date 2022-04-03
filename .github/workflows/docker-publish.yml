@@ -9,11 +9,11 @@ on:
   schedule:
     - cron: '24 17 * * *'
   push:
-    branches: [ beta ]
+    branches: [ s6-overlay-beta ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ beta ]
+    branches: [ s6-overlay-beta ]
 
 env:
   # Use docker.io for Docker Hub if empty
