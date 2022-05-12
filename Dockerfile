@@ -9,15 +9,16 @@ RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 
-
 RUN apt update \
  && apt dist-upgrade -qqy \
- && apt install git openssh-server ffmpeg -qqy \
+ && apt install curl gnupg -y \
+ && curl -fsSL https://repo.jellyfin.org/ubuntu/jellyfin_team.gpg.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/jellyfin.gpg \
+ && echo "deb [arch=$( dpkg --print-architecture )] https://repo.jellyfin.org/$( awk -F'=' '/^ID=/{ print $NF }' /etc/os-release ) $( awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release ) main" | sudo tee /etc/apt/sources.list.d/jellyfin.list \
+ && apt update
+
+RUN apt install git openssh-server jellyfin-ffmpeg5 -qqy \
  && pip install pyyaml \
  && git clone https://github.com/joshuaboniface/rffmpeg.git /etc/rffmpeg
-
-RUN wget https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v4.4.1-4/jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb \
- && dpkg -i jellyfin-ffmpeg_4.4.1-4-bullseye_amd64.deb
 
 WORKDIR /etc/rffmpeg
 
